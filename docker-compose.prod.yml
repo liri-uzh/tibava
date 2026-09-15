@@ -94,7 +94,7 @@ services:
   frontend:
     working_dir: /usr/share/nginx/html
     ports: !override
-      - "127.0.0.1:8080:80"
+      - "8080:80"
     volumes: !override
       - type: bind
         source: ./data/predictions/
