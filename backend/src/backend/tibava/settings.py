@@ -51,6 +51,26 @@ with open(YAML_CONFIG_PATH, "rb") as f:
 SECRET_KEY = get_value(config, "SECRET_KEY", "secret_key", "default_secret")
 DEBUG = get_value(config, "DEBUG", "debug", False)
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = get_value(
+    config, "USE_X_FORWARDED_HOST", "security.use_x_forwarded_host", False
+)
+SESSION_COOKIE_SECURE = get_value(
+    config, "SESSION_COOKIE_SECURE", "security.session_cookie_secure", False
+)
+CSRF_COOKIE_SECURE = get_value(
+    config, "CSRF_COOKIE_SECURE", "security.csrf_cookie_secure", False
+)
+SECURE_CONTENT_TYPE_NOSNIFF = get_value(
+    config,
+    "SECURE_CONTENT_TYPE_NOSNIFF",
+    "security.content_type_nosniff",
+    True,
+)
+SECURE_HSTS_SECONDS = int(
+    get_value(config, "SECURE_HSTS_SECONDS", "security.hsts_seconds", 0)
+)
+
 
 FORCE_SCRIPT_NAME = get_value(config, "FORCE_SCRIPT_NAME", "force_script_name", "/")
 
@@ -203,7 +223,10 @@ USE_TZ = True
 
 STATICFILES_DIRS = []
 
-STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
+STATIC_URL = f"{FORCE_SCRIPT_NAME.rstrip('/')}/static/"
+STATIC_ROOT = get_value(
+    config, "STATIC_ROOT", "static_root", str(BASE_DIR / "staticfiles")
+)
 
 # MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "..", "media")
 

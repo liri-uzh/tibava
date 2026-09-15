@@ -1,0 +1,115 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  inference_ray:
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      valkey:
+        condition: service_started
+
+  analyser:
+    restart: unless-stopped
+    logging: *default-logging
+    depends_on:
+      inference_ray:
+        condition: service_started
+      valkey:
+        condition: service_started
+
+  postgres:
+    environment:
+      POSTGRES_DB: ${DB_NAME:?Set DB_NAME in .env.production}
+      POSTGRES_USER: ${DB_USER:?Set DB_USER in .env.production}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env.production}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging: *default-logging
+
+  memcached:
+    restart: unless-stopped
+    logging: *default-logging
+
+  valkey:
+    ports: !reset []
+    restart: unless-stopped
+    logging: *default-logging
+
+  celery:
+    env_file:
+      - .env.production
+    command: celery -A tibava worker -l INFO --concurrency=4 --pool=threads
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_started
+      analyser:
+        condition: service_started
+    logging: *default-logging
+
+  backend:
+    env_file:
+      - .env.production
+    command: >-
+      gunicorn --chdir backend/src/backend --bind 0.0.0.0:8000
+      --workers 4 --timeout 600 tibava.wsgi:application
+    ports: !reset []
+    volumes:
+      - type: bind
+        source: ./data/static/
+        target: /static
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+      celery:
+        condition: service_started
+      analyser:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz/readiness', timeout=5)"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging: *default-logging
+
+  frontend:
+    working_dir: /usr/share/nginx/html
+    ports: !override
+      - "127.0.0.1:8080:80"
+    volumes: !override
+      - type: bind
+        source: ./data/predictions/
+        target: /thumbnails
+        read_only: true
+      - type: bind
+        source: ./data/media/
+        target: /media
+        read_only: true
+      - type: bind
+        source: ./data/static/
+        target: /static
+        read_only: true
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    logging: *default-logging
