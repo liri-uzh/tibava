@@ -102,46 +102,6 @@ export const useUserStore = defineStore("user", {
         });
     },
 
-    async login(params) {
-      if (this.isLoading) {
-        return;
-      }
-      this.isLoading = true;
-
-      return axios
-        .post(`${config.API_LOCATION}/user/login`, { params })
-        .then((res) => {
-          if (res.data.status === "ok") {
-            if ("username" in res.data.data) {
-              this.username = res.data.data.username;
-            }
-            if ("email" in res.data.data) {
-              this.email = res.data.data.email;
-            }
-            if ("date" in res.data.data) {
-              this.date = res.data.data.date;
-            }
-            if ("allowance" in res.data.data) {
-              this.allowance = res.data.data.allowance;
-            }
-            if ("max_video_size" in res.data.data) {
-              this.max_video_size = res.data.data.max_video_size;
-            }
-            if ("max_plugin_runs" in res.data.data) {
-              this.max_plugin_runs = res.data.data.max_plugin_runs;
-            }
-            this.loggedIn = true;
-          }
-          if (res.data.status === "ok" || "message" in res.data) {
-            return res.data;
-          } else {
-            return { status: "error", message: "Invalid message." };
-          }
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
-    },
     async logout() {
       if (this.isLoading) {
         return;
@@ -174,30 +134,6 @@ export const useUserStore = defineStore("user", {
       // .finally(() => {
       //   commit('loading/update', false, { root: true });
       // });
-    },
-    async register(params) {
-      if (this.isLoading) {
-        return;
-      }
-      this.isLoading = true;
-
-      // commit('loading/update', true, { root: true });
-      return axios
-        .post(`${config.API_LOCATION}/user/register`, { params })
-        .then((res) => {
-          if (res.data.status === "ok") {
-            this.isLoading = false;
-            this.getUserData();
-          }
-          if (res.data.status === "ok" || "message" in res.data) {
-            return res.data;
-          } else {
-            return { status: "error", message: "Invalid message." };
-          }
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
     },
   },
   persist: {

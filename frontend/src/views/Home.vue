@@ -84,8 +84,6 @@
                   />
                 </video>
               </p>
-              <h2 class="text-h5 mb-1 mt-4">{{ $t("welcome.login_title") }}</h2>
-              <p v-html="$t('welcome.login_text')"></p>
               <h2 class="text-h5 mb-1 mt-4">
                 {{ $t("welcome.format_title") }}
               </h2>

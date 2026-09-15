@@ -8,9 +8,7 @@ urlpatterns = [
     path("healthz/readiness", views.readiness, name="health_readiness"),
     #
     path("user/csrf", views.get_csrf_token, name="get_csrf_token"),
-    path("user/login", views.login, name="login"),
     path("user/logout", views.logout, name="logout"),
-    path("user/register", views.register, name="register"),
     path("user/get", views.UserGet.as_view(), name="user_get"),
     #
     path("video/upload", views.VideoUpload.as_view(), name="video_upload"),

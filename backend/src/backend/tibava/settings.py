@@ -129,6 +129,10 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "backend.TibavaUser"
 
+REMOTE_USER_AUTH_ENABLED = get_value(
+    config, "REMOTE_USER_AUTH_ENABLED", "remote_user_auth_enabled", False
+)
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -139,6 +143,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if REMOTE_USER_AUTH_ENABLED:
+    authentication_middleware_index = MIDDLEWARE.index(
+        "django.contrib.auth.middleware.AuthenticationMiddleware"
+    )
+    MIDDLEWARE.insert(
+        authentication_middleware_index + 1,
+        "backend.middleware.ShibbolethRemoteUserMiddleware",
+    )
+    AUTHENTICATION_BACKENDS = ["backend.authentication.EmailRemoteUserBackend"]
 
 ROOT_URLCONF = "tibava.urls"
 
