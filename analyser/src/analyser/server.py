@@ -93,8 +93,13 @@ class AnalyserCacheWrapper:
                 parameters=parameters,
                 callbacks=callbacks,
             )
+            #logging.info(
+            #    f"[AnalyserPluginManager] {run_id} results: {[{k: x} for k, x in results.items()]}"
+            #)
             logging.info(
-                f"[AnalyserPluginManager] {run_id} results: {[{k: x} for k, x in results.items()]}"
+                "[AnalyserPluginManager] %s results: %r",
+                run_id,
+                results,
             )
 
         if self.cache:
