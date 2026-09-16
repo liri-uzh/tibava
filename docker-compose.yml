@@ -8,6 +8,7 @@ services:
 
     environment:
       - HF_HOME=/models
+      - HF_TOKEN=${HF_TOKEN}
       - NUMBA_CACHE_DIR=/tmp
 
     volumes:
