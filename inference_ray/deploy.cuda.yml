@@ -912,6 +912,7 @@ applications:
           min_replicas: 0
         ray_actor_options:
           num_cpus: 2
+          num_gpus: 0.5
           runtime_env:
             pip:
               - git+https://github.com/m-bain/whisperx.git

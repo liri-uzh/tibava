@@ -1,7 +1,12 @@
 FROM python:3.12-slim-bookworm AS runtime
 
+ARG WORKSPACE_MEMBER
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libmagickwand-dev imagemagick git \
+    && if [ "${WORKSPACE_MEMBER}" = "inference_ray" ]; then \
+        apt-get install -y --no-install-recommends ffmpeg; \
+    fi \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -10,8 +15,6 @@ WORKDIR /app
 
 ENV UV_COMPILE_BYTECODE=1 \
     PATH="/app/.venv/bin:$PATH"
-
-ARG WORKSPACE_MEMBER
 
 # Copy only workspace metadata first. This layer changes when locked third-party
 # dependencies change, but not for ordinary application source edits.
