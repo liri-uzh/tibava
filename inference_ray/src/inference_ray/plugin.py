@@ -224,11 +224,13 @@ class AnalyserPluginManager(Manager):
                     "inputs": {x: y.id for x, y in inputs.items()},
                     "parameters": parameters,
                 },
-                timeout=600
+                timeout=600,
             )
-        except:
-            logging.error("AnalyserPluginMananger: Can start plugin on ray server")
-            return []
+        except requests.RequestException:
+            logging.exception(
+                "AnalyserPluginManager: Could not start plugin on ray server"
+            )
+            return None
 
         if not results.ok:
             logging.error(
@@ -252,12 +254,3 @@ class AnalyserPluginManager(Manager):
             return None
 
         return data
-
-        #try:
-        #    data = results.json()
-        #except:
-        #    logging.error(f"AnalyserPluginMananger: {results}")
-        #    logging.error("AnalyserPluginMananger: Can decode response from ray server")
-        #    return []
-
-        #return data

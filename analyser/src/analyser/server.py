@@ -93,9 +93,14 @@ class AnalyserCacheWrapper:
                 parameters=parameters,
                 callbacks=callbacks,
             )
-            #logging.info(
-            #    f"[AnalyserPluginManager] {run_id} results: {[{k: x} for k, x in results.items()]}"
-            #)
+            if results is None:
+                logging.error(
+                    "[AnalyserPluginManager] %s plugin %s returned no results",
+                    run_id,
+                    plugin,
+                )
+                return None
+
             logging.info(
                 "[AnalyserPluginManager] %s results: %r",
                 run_id,

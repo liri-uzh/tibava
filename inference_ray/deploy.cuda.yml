@@ -464,6 +464,7 @@ applications:
           num_gpus: 0.1
           runtime_env:
             uv:
+              - numpy<2
               - torch==2.2.0
 
   - name: video_to_video
