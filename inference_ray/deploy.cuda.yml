@@ -228,7 +228,7 @@ applications:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
               - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - onnx==1.17.0
   - name: insightface_video_detector_torch
     route_prefix: /insightface_video_detector_torch
     import_path: inference_ray.main:app_builder
@@ -306,7 +306,7 @@ applications:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
               - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - onnx==1.17.0
   - name: insightface_image_feature_extractor
     route_prefix: /insightface_image_feature_extractor
     import_path: inference_ray.main:app_builder
@@ -327,7 +327,7 @@ applications:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
               - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - onnx==1.17.0
   - name: min_max_norm
     route_prefix: /min_max_norm
     import_path: inference_ray.main:app_builder
@@ -578,7 +578,7 @@ applications:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
               - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - onnx==1.17.0
               - cuda-python==12.2.0
               - regex==2023.12.25
               - ftfy==6.1.3
@@ -602,7 +602,7 @@ applications:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
               - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - onnx==1.17.0
               - cuda-python==12.2.0
               - regex==2023.12.25
               - ftfy==6.1.3
@@ -627,7 +627,7 @@ applications:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
               - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - onnx==1.17.0
               - cuda-python==12.2.0
               - regex==2023.12.25
               - ftfy==6.1.3
@@ -938,7 +938,8 @@ applications:
             pip:
               - librosa==0.10.1
               - setuptools<82
-              - torch>=2.6.0
+              - torch==2.6.0
+              - torchaudio==2.6.0
               - transformers>=4.48.3
               - speechbrain==1.0.2
   - name: audio_gender
@@ -958,7 +959,8 @@ applications:
             pip:
               - librosa==0.10.1
               - setuptools<82
-              - torch>=2.6.0
+              - torch==2.6.0
+              - torchaudio==2.6.0
               - transformers>=4.48.3
               - speechbrain==1.0.2
   - name: active_speaker_detection
@@ -1001,8 +1003,8 @@ applications:
             pip:
               - librosa==0.10.1
               - setuptools<82
-              - torch>=2.6.0
-              - torchaudio # TODO specify version
+              - torch==2.6.0
+              - torchaudio==2.6.0
   - name: text_ner
     route_prefix: /text_ner
     import_path: inference_ray.main:app_builder
