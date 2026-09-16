@@ -87,7 +87,7 @@ class WhisperX(
         import torch
         import whisperx
 
-        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        device = "cuda" if torch.cuda.is_available() else "cpu"
         if self.model is None:
             self.model = whisperx.load_model(
                 "large-v3",
