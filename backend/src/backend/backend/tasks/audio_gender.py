@@ -6,7 +6,7 @@ from ..utils.analyser_client import TaskAnalyserClient
 from backend.models import PluginRun, Video, Timeline
 from backend.plugin_manager import PluginManager
 
-from backend.utils.parser import Parser, parse_language_code
+from backend.utils.parser import Parser, parse_alignment_language_code
 from backend.utils.task import Task
 from backend.utils.color import color_map
 
@@ -29,7 +29,7 @@ from django.conf import settings
 class AudioGenderParser(Parser):
     def __init__(self):
         self.valid_parameter = {
-            "language_code": {"parser": parse_language_code, "default": None},
+            "language_code": {"parser": parse_alignment_language_code, "default": None},
             "timeline": {"parser": str, "default": "Audio Gender Classification"},
         }
 
@@ -78,7 +78,10 @@ class AudioGender(Task):
         whisper_result = self.run_analyser(
             client,
             "whisper_x",
-            parameters={"language_code": parameters.get("language_code")},
+            parameters={
+                "language_code": parameters.get("language_code"),
+                "require_alignment": True,
+            },
             inputs={**audio_result[0]},
             outputs=["annotations"],
         )

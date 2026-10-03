@@ -1,13 +1,33 @@
 import logging
 from typing import Dict, List
 
+from .whisperx_languages import WHISPER_LANGUAGES, WHISPERX_ALIGNMENT_LANGUAGES
+
 
 logger = logging.getLogger(__name__)
 
 
+class ParameterValidationError(ValueError):
+    """A safe validation message that may be returned to an API caller."""
+
+
 def parse_language_code(value):
-    """Normalize the optional transcription language used by the frontend."""
-    return None if value in (None, "", "none") else str(value)
+    """Normalize and validate an optional Whisper transcription language."""
+    if value in (None, "", "none"):
+        return None
+    if not isinstance(value, str) or value not in WHISPER_LANGUAGES:
+        raise ParameterValidationError("Invalid Whisper transcription language code.")
+    return value
+
+
+def parse_alignment_language_code(value):
+    language = parse_language_code(value)
+    if language is not None and language not in WHISPERX_ALIGNMENT_LANGUAGES:
+        raise ParameterValidationError(
+            f"Language '{language}' is supported for transcription but does not "
+            "have a default WhisperX alignment model required by this workflow."
+        )
+    return language
 
 
 class Parser:
@@ -37,6 +57,8 @@ class Parser:
                     value = parser(p["value"])
                 task_parameter[p["name"]] = value
 
+            except ParameterValidationError:
+                raise
             except Exception as e:
                 logger.error(f"[Parser] {p['name']} could not parse ({e})")
                 return None

@@ -6,7 +6,7 @@ from ..utils.analyser_client import TaskAnalyserClient
 from backend.models import PluginRun, Video, Timeline
 from backend.plugin_manager import PluginManager
 
-from backend.utils.parser import Parser, parse_language_code
+from backend.utils.parser import Parser, parse_language_code, parse_alignment_language_code
 from backend.utils.task import Task
 from backend.utils.color import get_color_from_label
 
@@ -32,6 +32,14 @@ class AudioClassificationParser(Parser):
             "timeline": {"parser": str, "default": "Audio Classification"},
             "segment_type": {"parser": str},  # Speaker or Shot
         }
+
+    def __call__(self, parameters=None, **kwargs):
+        parameters = super().__call__(parameters, **kwargs)
+        if parameters is not None and parameters.get("segment_type") == "Speaker":
+            parameters["language_code"] = parse_alignment_language_code(
+                parameters.get("language_code")
+            )
+        return parameters
 
 
 @PluginManager.export_plugin("audio_classification")
@@ -79,7 +87,10 @@ class AudioClassification(Task):
             segmentation_result = self.run_analyser(
                 client,
                 "whisper_x",
-                parameters={"language_code": parameters.get("language_code")},
+                parameters={
+                    "language_code": parameters.get("language_code"),
+                    "require_alignment": True,
+                },
                 inputs={**audio_result[0]},
                 outputs=["annotations"],
             )

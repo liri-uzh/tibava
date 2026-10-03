@@ -26,6 +26,7 @@ from django.conf import settings
 
 from backend.models import Video, PluginRun
 from backend.plugin_manager import PluginManager
+from backend.utils.parser import ParameterValidationError
 
 
 logger = logging.getLogger(__name__)
@@ -128,6 +129,10 @@ class PluginRunNew(View):
             if result:
                 return JsonResponse({"status": "ok"})
             return JsonResponse({"status": "error", "type": "plugin_not_started"})
+        except ParameterValidationError as exc:
+            return JsonResponse({
+                "status": "error", "type": "invalid_parameter", "message": str(exc)
+            })
         except Exception:
             logger.exception("Failed to create new plugin run")
             return JsonResponse({"status": "error"})

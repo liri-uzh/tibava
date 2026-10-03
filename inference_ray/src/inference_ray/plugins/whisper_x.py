@@ -12,7 +12,7 @@ default_config = {
     "port": 6379,
 }
 
-default_parameters = {"language_code": None}
+default_parameters = {"language_code": None, "require_alignment": False}
 
 requires = {
     "audio": AudioData,
@@ -76,6 +76,12 @@ class WhisperX(
         self.alignment_model = None
         self.model_name = self.config.get("model", "whisper_x")
 
+    def __call__(self, inputs, data_manager, parameters=None, callbacks=None):
+        # The base plugin retains parameters between calls. Do not retain a
+        # previous audio workflow's alignment requirement for a transcript job.
+        parameters = {"require_alignment": False, **(parameters or {})}
+        return super().__call__(inputs, data_manager, parameters, callbacks=callbacks)
+
     def call(
         self,
         inputs: Dict[str, Data],
@@ -120,9 +126,17 @@ class WhisperX(
                         f"No default align-model for language: {alignment_language}"
                     ):
                         raise
+                    if (parameters or {}).get("require_alignment", False):
+                        raise ValueError(
+                            "WhisperX alignment is required for this workflow, but "
+                            "no default alignment model is available for language "
+                            f"'{alignment_language}'. Select the correct language "
+                            "explicitly if detection was wrong."
+                        ) from exc
                     logging.warning(
                         "No default WhisperX alignment model for language '%s'; "
-                        "continuing without alignment.",
+                        "continuing without alignment. Using coarse transcription "
+                        "timestamps; speaker attribution may be less accurate.",
                         alignment_language,
                     )
                     aligned_transcription = transcription

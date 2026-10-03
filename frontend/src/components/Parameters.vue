@@ -5,6 +5,7 @@
         :key="parameter.name"></v-text-field>
 
       <v-select v-model="parameter.value" :items="parameter.items" :label="parameter.text"
+        :hint="parameter.hint" :persistent-hint="!!parameter.hint"
         v-if="parameter.field == 'select_options'" :key="parameter.name"></v-select>
 
       <v-select v-model="parameter.value" :items="shot_timelines" :label="parameter.text" :hint="parameter.hint"

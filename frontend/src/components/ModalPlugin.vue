@@ -175,6 +175,7 @@ import { mapStores } from "pinia";
 import { usePluginRunStore } from "@/store/plugin_run";
 import { usePluginStore } from "@/store/plugin";
 import Parameters from "./Parameters.vue";
+import { whisperLanguageOptions } from "@/constants/whisperxLanguages";
 // import { useTimelineStore } from "../store/timeline";
 
 export default {
@@ -315,10 +316,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "language_code",
-                  value: "none", // TODO should be no value (currently then no task is started)
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  value: "none",
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), false),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.language_code_hint"),
                 },
               ],
             },
@@ -338,10 +341,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "language_code",
                   value: "none",
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), true),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.alignment_language_hint"),
                 },
               ],
             },
@@ -361,10 +366,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "language_code",
                   value: "none",
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), true),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.alignment_language_hint"),
                 },
               ],
             },
@@ -391,10 +398,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "language_code",
                   value: "none",
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), true),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.alignment_language_hint"),
                 },
               ],
             },
@@ -1717,10 +1726,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "language_code",
                   value: "none",
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), false),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.language_code_hint"),
                 },
               ]
             },
@@ -1746,10 +1757,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "transcription_language_code",
                   value: "none",
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), false),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.language_code_hint"),
                 },
               ]
             },
@@ -1776,10 +1789,12 @@ export default {
               ],
               optional_parameters: [
                 {
-                  field: "text_field",
+                  field: "select_options",
                   name: "language_code",
                   value: "none",
-                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                  items: whisperLanguageOptions(this.$t("modal.plugin.whisper_x.auto_detect"), false),
+                  text: this.$t("modal.plugin.whisper_x.language_code_name"),
+                  hint: this.$t("modal.plugin.whisper_x.language_code_hint"),
                 },
               ]
             }
