@@ -87,13 +87,14 @@ class WhisperX(
         import torch
         import whisperx
 
+        language_code = (parameters or {}).get("language_code") or None
         device = "cuda" if torch.cuda.is_available() else "cpu"
         if self.model is None:
             self.model = whisperx.load_model(
                 "large-v3",
                 device=device,
                 compute_type="int8",
-                language=parameters.get("language_code"),
+                language=language_code,
             )  # TODO originally compute_type="float16" but not supported by m1. probably change back for production
             self.diarize_model = whisperx.diarize.DiarizationPipeline(device=device)
             self.device = device
@@ -105,22 +106,35 @@ class WhisperX(
             with input_data.open_audio("r") as f_audio:
                 y, sr = librosa.load(f_audio, sr=16000)
                 transcription = self.model.transcribe(
-                    audio=y, batch_size=8, language=parameters.get("language_code")
+                    audio=y, batch_size=8, language=language_code
                 )
 
+                alignment_language = language_code or transcription["language"]
                 # always instantiate new alignment model to match current language
-                self.alignment_model, self.metadata = whisperx.load_align_model(
-                    language_code=transcription["language"], device=device
-                )
-
-                aligned_transcription = whisperx.align(
-                    transcription["segments"],
-                    self.alignment_model,
-                    self.metadata,
-                    y,
-                    device,
-                    return_char_alignments=False,
-                )
+                try:
+                    self.alignment_model, self.metadata = whisperx.load_align_model(
+                        language_code=alignment_language, device=device
+                    )
+                except ValueError as exc:
+                    if str(exc) != (
+                        f"No default align-model for language: {alignment_language}"
+                    ):
+                        raise
+                    logging.warning(
+                        "No default WhisperX alignment model for language '%s'; "
+                        "continuing without alignment.",
+                        alignment_language,
+                    )
+                    aligned_transcription = transcription
+                else:
+                    aligned_transcription = whisperx.align(
+                        transcription["segments"],
+                        self.alignment_model,
+                        self.metadata,
+                        y,
+                        device,
+                        return_char_alignments=False,
+                    )
 
                 diarize_segments = self.diarize_model(y)
                 speaker_transcription = whisperx.assign_word_speakers(

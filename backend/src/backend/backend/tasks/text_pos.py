@@ -6,7 +6,7 @@ from ..utils.analyser_client import TaskAnalyserClient
 from backend.models import PluginRun, Video, Timeline
 from backend.plugin_manager import PluginManager
 
-from backend.utils.parser import Parser
+from backend.utils.parser import Parser, parse_language_code
 from backend.utils.task import Task
 from backend.utils import rgb_to_hex
 
@@ -31,6 +31,7 @@ class PoSTaggingParser(Parser):
         self.valid_parameter = {
             "timeline": {"parser": str, "default": "PoS Tagging"},
             "language_code": {"parser": str, "default": "de"},
+            "transcription_language_code": {"parser": parse_language_code, "default": None},
         }
 
 
@@ -77,9 +78,8 @@ class PoSTagging(Task):
         segmentation_result = self.run_analyser(
             client,
             "whisper_x",
-            parameters={
-                "language_code": None
-            },  # TODO should whisper_x detect the language by itself (cached version can be used) or use explicitly set language for pos tags?
+            # Keep the POS model's default language separate from transcription.
+            parameters={"language_code": parameters.get("transcription_language_code")},
             inputs={**audio_result[0]},
             outputs=["annotations"],
         )

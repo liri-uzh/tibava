@@ -336,7 +336,14 @@ export default {
                   text: this.$t("modal.plugin.timeline_name"),
                 },
               ],
-              optional_parameters: [],
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none",
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ],
             },
             {
               name: this.$t("modal.plugin.audio_gender.plugin_name"),
@@ -352,7 +359,14 @@ export default {
                   text: this.$t("modal.plugin.timeline_name"),
                 },
               ],
-              optional_parameters: [],
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none",
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ],
             },
             {
               name: this.$t("modal.plugin.audio_classification.plugin_name"),
@@ -375,7 +389,14 @@ export default {
                   name: "segment_type",
                 },
               ],
-              optional_parameters: [],
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none",
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ],
             },
           ],
         },
@@ -1694,7 +1715,14 @@ export default {
                   text: this.$t("modal.plugin.timeline_name"),
                 },
               ],
-              optional_parameters: []
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none",
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ]
             },
             {
               name: this.$t("modal.plugin.text_pos.plugin_name"),
@@ -1716,7 +1744,14 @@ export default {
                   text: this.$t("modal.plugin.text_pos.language_code_name")
                 },
               ],
-              optional_parameters: []
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "transcription_language_code",
+                  value: "none",
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ]
             },
             {
               name: this.$t("modal.plugin.text_sentiment.plugin_name"),
@@ -1739,7 +1774,14 @@ export default {
                   name: "model_type",
                 },
               ],
-              optional_parameters: []
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none",
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ]
             }
           ]
         }

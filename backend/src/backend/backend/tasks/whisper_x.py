@@ -6,7 +6,7 @@ from ..utils.analyser_client import TaskAnalyserClient
 from backend.models import PluginRun, Video, Timeline
 from backend.plugin_manager import PluginManager
 
-from backend.utils.parser import Parser
+from backend.utils.parser import Parser, parse_language_code
 from backend.utils.task import Task
 
 from tibava_data import DataManager  # type: ignore
@@ -29,14 +29,8 @@ class WhisperXParser(Parser):
     def __init__(self):
         self.valid_parameter = {
             "timeline": {"parser": str, "default": "WhisperX Transcript"},
-            "language_code": {"parser": str, "default": None},
+            "language_code": {"parser": parse_language_code, "default": None},
         }
-
-    def __call__(self, parameters: Dict = None, **kwargs) -> Dict:
-        parameters = super().__call__(parameters, **kwargs)
-        if parameters["language_code"] == "none":
-            parameters["language_code"] = None
-        return parameters
 
 
 @PluginManager.export_plugin("whisper_x")

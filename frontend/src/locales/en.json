@@ -263,7 +263,7 @@
         "plugin_name": "PoS Tagging",
         "timeline_name": "PoS Tagging",
         "plugin_description": "This plugin performs PoS Tagging based on the speaker segments of WhisperX. For each speaker segment the count of each PoS-Tag is shown.",
-        "language_code_name": "Language Code"
+        "language_code_name": "POS Language Code"
       },
       "text_sentiment": {
         "plugin_name": "Sentiment Analysis",

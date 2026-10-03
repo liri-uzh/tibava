@@ -5,6 +5,11 @@ from typing import Dict, List
 logger = logging.getLogger(__name__)
 
 
+def parse_language_code(value):
+    """Normalize the optional transcription language used by the frontend."""
+    return None if value in (None, "", "none") else str(value)
+
+
 class Parser:
     def __init__(self):
         self.valid_parameter = {}
