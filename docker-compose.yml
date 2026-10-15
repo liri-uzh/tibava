@@ -10,6 +10,7 @@ services:
       - HF_HOME=/models
       - HF_TOKEN=${HF_TOKEN}
       - NUMBA_CACHE_DIR=/tmp
+      - TZ=Europe/Zurich
 
     volumes:
       - type: bind
@@ -147,6 +148,7 @@ services:
     working_dir: /app/backend/src/backend/
     environment:
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+      - TZ=Europe/Zurich
       # - GRPC_ENABLE_FORK_SUPPORT=1
       # - GRPC_POLL_STRATEGY=poll
       # - GRPC_VERBOSITY=debug
