@@ -26,6 +26,9 @@
       item-key="id"
       class="elevation-1"
     >
+      <template v-slot:item.date="{ value }">
+        {{ formatDate(value) }}
+      </template>
       <template v-slot:item.status="{ value }">
         <v-chip :color="progressColor(value)"> {{ value }}</v-chip>
       </template>
@@ -63,6 +66,25 @@ export default {
     };
   },
   methods: {
+    dateTimestamp(value) {
+      if (!value) return null;
+      const timestamp = new Date(value).getTime();
+      return Number.isNaN(timestamp) ? null : timestamp;
+    },
+    formatDate(timestamp) {
+      if (timestamp === null || timestamp === undefined) return "";
+      const date = new Date(timestamp);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString("sv-SE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+    },
     progressColor(status) {
       if (status === "ERROR") {
         return "red";
@@ -219,16 +241,15 @@ export default {
       const pluginRuns = this.pluginRunStore
         .forVideo(this.playerStore.videoId)
         .sort((a, b) => {
-          return new Date(b.date) - new Date(a.date);
+          return (this.dateTimestamp(b.date) ?? -Infinity) -
+            (this.dateTimestamp(a.date) ?? -Infinity);
         })
         .map((pluginRun, index) => {
           return {
             id: index,
             type: this.pluginName(pluginRun.type),
-            date: pluginRun.date
-              .replace("T", " ")
-              .replace("Z", "")
-              .substring(0, pluginRun.date.length - 5),
+            // Keep the sortable value chronological; localize only in the cell.
+            date: this.dateTimestamp(pluginRun.date),
             progress: parseFloat(pluginRun.progress), // * 100 + "%",
             status: pluginRun.status,
           };
