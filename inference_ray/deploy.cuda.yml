@@ -976,15 +976,18 @@ applications:
           min_replicas: 0
         ray_actor_options:
           num_cpus: 2
+          num_gpus: 0.1  # scheduling/visibility share, not a VRAM limit
           runtime_env:
             pip:
               - librosa==0.10.1
               - setuptools<82
-              - torch>=2.6.0
+              - torch==2.6.0
               - python_speech_features
               - scipy
               - opencv-python-headless
               - pandas
+              - numpy
+              - tqdm
 
   - name: audio_classification
     route_prefix: /audio_classification

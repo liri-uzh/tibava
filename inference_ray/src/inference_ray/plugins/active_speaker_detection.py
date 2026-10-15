@@ -9,7 +9,6 @@ import logging
 from typing import Callable, Dict, List, Any
 from pathlib import Path
 import math
-import sys
 import numpy as np
 
 
@@ -18,9 +17,7 @@ default_config = {
     "host": "localhost",
     "port": 6379,
     "model_name": "active_speaker_detector",
-    "save_dir": Path(
-        "/models/asd"
-    ),  # clone this repo into it: https://github.com/Junhua-Liao/Light-ASD (cuda() calls might be replaced and map_location=device added for torch.load if no cuda is available)
+    "save_dir": Path("/models/asd"),  # weights only; source is packaged separately
     "model": "talkset",  # or "ava"
 }
 
@@ -66,10 +63,17 @@ class ActiveSpeakerDetection(
         import python_speech_features
         import cv2
 
-        sys.path.append("/models/asd/Light-ASD")
-        from ASD import ASD  # type: ignore
+        from inference_ray.vendor.light_asd import load_asd
 
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        ASD = load_asd()
+
+        if not torch.cuda.is_available():
+            raise RuntimeError(
+                "active_speaker_detection requires CUDA: Light-ASD constructs "
+                "its model on the GPU. Check the Ray GPU reservation and "
+                "container GPU visibility."
+            )
+        device = "cuda"
 
         model = ASD()
         model_path = (

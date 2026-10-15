@@ -35,6 +35,9 @@ dependencies = [
 [tool.uv]
 package = true
 
+[tool.setuptools.package-data]
+"inference_ray.vendor.light_asd" = ["LICENSE", "UPSTREAM.md"]
+
 [tool.uv.sources]
 tibava_interface = { workspace = true }
 tibava_data = { workspace = true }
